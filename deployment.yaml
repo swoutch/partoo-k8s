@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: web
+  name: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - image: swoutch/echo-flask
+      #jul: It works with image gcr.io/google-samples/hello-app:1.0 but not with my custom image. try to:
+      # - change the port of the custom image to 8080
+      # - or try to leave the custom image with the port 80 but update service and ingress accordingly
+        name: hello-app
+        imagePullPolicy: Always
+        env:
+        - name: MSG
+          value: '{"name": "Kilian", "job": "Designer"}'

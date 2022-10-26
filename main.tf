@@ -1,11 +1,12 @@
 terraform {
   required_providers {
     gandi = {
-      version = "~> 2.0.0"
+      version = "2.2.0"
       source  = "go-gandi/gandi"
     }
     scaleway = {
-      source = "scaleway/scaleway"
+      source  = "scaleway/scaleway"
+      version = "2.5.0"
     }
     kubernetes = {
       version = "2.14.0"
@@ -27,9 +28,16 @@ locals {
 ############################################
 # Gandi
 ############################################
-resource "gandi_livedns_record" "pikachu_dns_record" {
+resource "gandi_livedns_record" "pikachu_swout_ch" {
   zone   = "swout.ch"
   name   = "pikachu"
+  type   = "A"
+  ttl    = 300
+  values = [one(flatten(data.kubernetes_service.example.status[*].load_balancer[*].ingress[*].ip))]
+}
+resource "gandi_livedns_record" "jules_lene_fr" {
+  zone   = "lene.fr"
+  name   = "jules"
   type   = "A"
   ttl    = 300
   values = [one(flatten(data.kubernetes_service.example.status[*].load_balancer[*].ingress[*].ip))]
@@ -44,25 +52,25 @@ provider "scaleway" {
   region = "fr-par"
 }
 
-resource "scaleway_k8s_cluster" "jack" {
+resource "scaleway_k8s_cluster" "the_cluster" {
   name    = "partoo-k8s"
   version = "1.24.5"
   cni     = "cilium"
 }
 
-resource "scaleway_k8s_pool" "john" {
-  cluster_id = scaleway_k8s_cluster.jack.id
-  name       = "john"
+resource "scaleway_k8s_pool" "the_pool" {
+  cluster_id = scaleway_k8s_cluster.the_cluster.id
+  name       = "the_pool"
   node_type  = "DEV1-M"
   size       = 2
 }
 
 resource "null_resource" "kubeconfig" {
-  depends_on = [scaleway_k8s_pool.john] # at least one pool here
+  depends_on = [scaleway_k8s_pool.the_pool] # at least one pool here
   triggers = {
-    host                   = scaleway_k8s_cluster.jack.kubeconfig[0].host
-    token                  = scaleway_k8s_cluster.jack.kubeconfig[0].token
-    cluster_ca_certificate = scaleway_k8s_cluster.jack.kubeconfig[0].cluster_ca_certificate
+    host                   = scaleway_k8s_cluster.the_cluster.kubeconfig[0].host
+    token                  = scaleway_k8s_cluster.the_cluster.kubeconfig[0].token
+    cluster_ca_certificate = scaleway_k8s_cluster.the_cluster.kubeconfig[0].cluster_ca_certificate
   }
 }
 
@@ -107,8 +115,4 @@ data "kubernetes_service" "example" {
     name      = local.nginx_ingress_controller_service_name
     namespace = kubernetes_namespace.nginx_ingress.metadata[0].name
   }
-}
-
-output "ip" {
-  value = one(flatten(data.kubernetes_service.example.status[*].load_balancer[*].ingress[*].ip))
 }
