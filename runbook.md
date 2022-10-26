@@ -62,3 +62,13 @@ Run curl from inside k8s:
 ```sh
 kubectl run mycurlpod --image=curlimages/curl -it --restart=Never --rm -- http://example.default.svc.cluster.local:80
 ```
+
+Build and run docker image (run it from inside the awesome-app directory):
+```sh
+docker build -t swoutch/echo-flask . && docker run -it --rm -p 5001:80 --env MSG='{"name": "Kilian", "job": "Designer"}' swoutch/echo-flask
+```
+
+Build for ARM and x86_64 and push docker image (run it from inside the awesome-app directory):
+```sh
+docker buildx build -t swoutch/echo-flask --push --platform linux/arm64,linux/amd64 .
+```

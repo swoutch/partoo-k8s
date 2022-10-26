@@ -1,8 +1,7 @@
-FROM python:3.6.12-alpine
+FROM python:3.10.8-alpine
 
-RUN pip3 install Flask==1.1.2 gunicorn==20.0.4
+RUN pip install Flask==2.2.2
 
-COPY . /app
-WORKDIR /app
+COPY ./app.py /
 
-ENTRYPOINT ["gunicorn", "--chdir", "app", "app:app", "-w", "2", "--threads", "2", "-b", "0.0.0.0:80"]
+ENTRYPOINT ["flask", "run", "--port=80", "--host=0.0.0.0"]
