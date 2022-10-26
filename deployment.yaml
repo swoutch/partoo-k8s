@@ -1,23 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  labels:
-    app: web
-  name: web
+  name: my-first-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: web
+      app: my-first-pod
   template:
     metadata:
       labels:
-        app: web
+        app: my-first-pod
     spec:
       containers:
       - image: swoutch/echo-flask
-        name: hello-app
+        name: echo-container
         imagePullPolicy: Always
         env:
         - name: MSG
-          value: '{"name": "Rémy", "passion": "Capoeira"}'
+          value: '3'
