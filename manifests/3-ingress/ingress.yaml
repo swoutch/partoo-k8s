@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: pikachu.swout.ch # j'ai loué ce nom de domaine et l'ai fait pointer sur l'adresse IP de mon cluster
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: service-expose-internet
+                port:
+                  number: 80
+
+# curl pikachu.swout.ch

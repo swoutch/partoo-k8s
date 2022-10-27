@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: un-pod-tout-seul
+spec:
+  containers:
+  - image: swoutch/echo-flask
+    name: echo-container
+    imagePullPolicy: Always
+    env:
+    - name: MSG
+      value: "Un pod tout seul\n"
+
+# kubectl apply -f pod.yaml
+# kubectl get pods
+# kubectl get pods -o wide
+# kubectl run mycurlpod --image=curlimages/curl -it --rm -- sh
+# curl http://<ADRESSE_IP>:80
+# kubectl delete -f pod.yaml

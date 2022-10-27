@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-expose-internet
+  labels:
+    tortue: geniale
+spec:
+  containers:
+  - image: swoutch/echo-flask
+    name: echo-container
+    imagePullPolicy: Always
+    env:
+    - name: MSG
+      value: "Tout internet peut voir ceci 👀\n"

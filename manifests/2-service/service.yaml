@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mon-premier-service
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    ma-cle: ma-valeur
+
+# kubectl apply -f 2-service
+# kubectl run bidule --image=curlimages/curl -it --rm -- sh
+# curl http://mon-premier-service.default.svc.cluster.local:80
+# kubectl delete -f 2-service
